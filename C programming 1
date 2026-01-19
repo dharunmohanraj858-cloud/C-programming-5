@@ -1,0 +1,47 @@
+struct document Doc;
+
+struct document get_document(char *text) {
+    int p = 0;
+    Doc.data = malloc(sizeof(struct paragraph) * 100);
+
+    char *para = strtok(text, "\n");
+    while (para) {
+        struct paragraph pg;
+        pg.data = malloc(sizeof(struct sentence) * 100);
+        pg.sentence_count = 0;
+
+        char *sent = strtok(para, ".");
+        while (sent) {
+            struct sentence st;
+            st.data = malloc(sizeof(struct word) * 100);
+            st.word_count = 0;
+
+            char *word = strtok(sent, " ");
+            while (word) {
+                st.data[st.word_count].data = word;
+                st.word_count++;
+                word = strtok(NULL, " ");
+            }
+
+            pg.data[pg.sentence_count++] = st;
+            sent = strtok(NULL, ".");
+        }
+
+        Doc.data[p++] = pg;
+        para = strtok(NULL, "\n");
+    }
+    Doc.paragraph_count = p;
+    return Doc;
+}
+
+struct paragraph get_paragraph(int k) {
+    return Doc.data[k - 1];
+}
+
+struct sentence get_sentence(int k, int m) {
+    return Doc.data[k - 1].data[m - 1];
+}
+
+struct word get_word(int k, int m, int n) {
+    return Doc.data[k - 1].data[m - 1].data[n - 1];
+}
