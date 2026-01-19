@@ -1,0 +1,48 @@
+void print_all_packages(town t) {
+    printf("%s:\n", t.name);
+    for (int i = 0; i < t.offices_count; i++) {
+        printf("\t%d:\n", i);
+        for (int j = 0; j < t.offices[i].packages_count; j++)
+            printf("\t\t%s\n", t.offices[i].packages[j].id);
+    }
+}
+
+void send_all_acceptable_packages(town *src, int si, town *dst, int di) {
+    post_office *s = &src->offices[si];
+    post_office *d = &dst->offices[di];
+
+    package *remain = malloc(sizeof(package) * s->packages_count);
+    int rc = 0;
+
+    for (int i = 0; i < s->packages_count; i++) {
+        if (s->packages[i].weight >= d->min_weight &&
+            s->packages[i].weight <= d->max_weight) {
+            d->packages[d->packages_count++] = s->packages[i];
+        } else {
+            remain[rc++] = s->packages[i];
+        }
+    }
+    s->packages = remain;
+    s->packages_count = rc;
+}
+
+town town_with_most_packages(town *towns, int n) {
+    int max = -1, idx = 0;
+    for (int i = 0; i < n; i++) {
+        int sum = 0;
+        for (int j = 0; j < towns[i].offices_count; j++)
+            sum += towns[i].offices[j].packages_count;
+        if (sum > max) {
+            max = sum;
+            idx = i;
+        }
+    }
+    return towns[idx];
+}
+
+town* find_town(town *towns, int n, char *name) {
+    for (int i = 0; i < n; i++)
+        if (strcmp(towns[i].name, name) == 0)
+            return &towns[i];
+    return NULL;
+}
