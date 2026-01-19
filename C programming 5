@@ -1,0 +1,43 @@
+char**** get_document(char *text) {
+    static char ****doc;
+    doc = malloc(sizeof(char***) * 10);
+
+    int p = 0;
+    char *para = strtok(text, "\n");
+    while (para) {
+        doc[p] = malloc(sizeof(char**) * 10);
+        int s = 0;
+
+        char *sent = strtok(para, ".");
+        while (sent) {
+            doc[p][s] = malloc(sizeof(char*) * 10);
+            int w = 0;
+
+            char *word = strtok(sent, " ");
+            while (word) {
+                doc[p][s][w++] = word;
+                word = strtok(NULL, " ");
+            }
+            doc[p][s][w] = NULL;
+            s++;
+            sent = strtok(NULL, ".");
+        }
+        doc[p][s] = NULL;
+        p++;
+        para = strtok(NULL, "\n");
+    }
+    doc[p] = NULL;
+    return doc;
+}
+
+char*** get_paragraph(char**** doc, int k) {
+    return doc[k - 1];
+}
+
+char** get_sentence(char**** doc, int k, int m) {
+    return doc[k - 1][m - 1];
+}
+
+char* get_word(char**** doc, int k, int m, int n) {
+    return doc[k - 1][m - 1][n - 1];
+}
